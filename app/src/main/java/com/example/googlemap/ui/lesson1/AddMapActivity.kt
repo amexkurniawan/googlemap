@@ -6,11 +6,13 @@ import androidx.core.content.ContextCompat
 import com.example.googlemap.R
 import com.example.googlemap.utils.helper.BitmapHelper
 import com.example.googlemap.utils.place.Place
+import com.example.googlemap.utils.place.PlaceRenderer
 import com.example.googlemap.utils.place.PlacesReader
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.maps.android.clustering.ClusterManager
 
 class AddMapActivity : AppCompatActivity() {
 
@@ -30,9 +32,9 @@ class AddMapActivity : AppCompatActivity() {
             R.id.map_fragment
         ) as? SupportMapFragment
         mapFragment?.getMapAsync { googleMap ->
-            addMarkers(googleMap)
-            // Set custom info window adapter
-            googleMap.setInfoWindowAdapter(MarkerInfoWindowAdapter(this))
+//            addMarkers(googleMap)
+//            googleMap.setInfoWindowAdapter(MarkerInfoWindowAdapter(this))
+            addClusteredMarkers(googleMap)
         }
     }
 
@@ -51,6 +53,33 @@ class AddMapActivity : AppCompatActivity() {
             // Set place as the tag on the marker object so it can be referenced within
             // MarkerInfoWindowAdapter
             marker.tag = place
+        }
+    }
+
+    /**
+     * Adds markers to the map with clustering support.
+     */
+    private fun addClusteredMarkers(googleMap: GoogleMap) {
+        // Create the ClusterManager class and set the custom renderer.
+        val clusterManager = ClusterManager<Place>(this, googleMap)
+        clusterManager.renderer =
+            PlaceRenderer(
+                this,
+                googleMap,
+                clusterManager
+            )
+
+        // Set custom info window adapter
+        clusterManager.markerCollection.setInfoWindowAdapter(MarkerInfoWindowAdapter(this))
+
+        // Add the places to the ClusterManager.
+        clusterManager.addItems(places)
+        clusterManager.cluster()
+
+        // Set ClusterManager as the OnCameraIdleListener so that it
+        // can re-cluster when zooming in and out.
+        googleMap.setOnCameraIdleListener {
+            clusterManager.onCameraIdle()
         }
     }
 }
