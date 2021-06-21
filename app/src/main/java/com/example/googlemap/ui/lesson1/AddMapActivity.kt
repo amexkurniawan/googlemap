@@ -8,10 +8,10 @@ import com.example.googlemap.utils.helper.BitmapHelper
 import com.example.googlemap.utils.place.Place
 import com.example.googlemap.utils.place.PlaceRenderer
 import com.example.googlemap.utils.place.PlacesReader
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptor
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import com.google.maps.android.clustering.ClusterManager
 
 class AddMapActivity : AppCompatActivity() {
@@ -23,6 +23,7 @@ class AddMapActivity : AppCompatActivity() {
         val color = ContextCompat.getColor(this, R.color.purple_700)
         BitmapHelper.vectorToBitmap(this, R.drawable.ic_baseline_directions_bike_24, color)
     }
+    private var circle: Circle? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +36,12 @@ class AddMapActivity : AppCompatActivity() {
 //            addMarkers(googleMap)
 //            googleMap.setInfoWindowAdapter(MarkerInfoWindowAdapter(this))
             addClusteredMarkers(googleMap)
+            // Ensure all places are visible in the map.
+            googleMap.setOnMapLoadedCallback {
+                val bounds = LatLngBounds.builder()
+                places.forEach { bounds.include(it.latLng) }
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), 20))
+            }
         }
     }
 
@@ -76,10 +83,46 @@ class AddMapActivity : AppCompatActivity() {
         clusterManager.addItems(places)
         clusterManager.cluster()
 
+        // Show polygon
+        clusterManager.setOnClusterItemClickListener { item ->
+            addCircle(googleMap, item)
+            return@setOnClusterItemClickListener false
+        }
+
         // Set ClusterManager as the OnCameraIdleListener so that it
         // can re-cluster when zooming in and out.
         googleMap.setOnCameraIdleListener {
             clusterManager.onCameraIdle()
         }
+
+        // When the camera starts moving, change the alpha value of the marker to translucent.
+        googleMap.setOnCameraMoveStartedListener {
+            clusterManager.markerCollection.markers.forEach { it.alpha = 0.3f }
+            clusterManager.clusterMarkerCollection.markers.forEach { it.alpha = 0.3f }
+        }
+
+        googleMap.setOnCameraIdleListener {
+            // When the camera stops moving, change the alpha value back to opaque.
+            clusterManager.markerCollection.markers.forEach { it.alpha = 1.0f }
+            clusterManager.clusterMarkerCollection.markers.forEach { it.alpha = 1.0f }
+
+            // Call clusterManager.onCameraIdle() when the camera stops moving so that reclustering
+            // can be performed when the camera stops moving.
+            clusterManager.onCameraIdle()
+        }
+    }
+
+    /**
+     * Adds a [Circle] around the provided [item]
+     */
+    private fun addCircle(googleMap: GoogleMap, item: Place) {
+        circle?.remove()
+        circle = googleMap.addCircle(
+            CircleOptions()
+                .center(item.latLng)
+                .radius(1000.0)
+                .fillColor(ContextCompat.getColor(this, R.color.teal_200))
+                .strokeColor(ContextCompat.getColor(this, R.color.teal_700))
+        )
     }
 }
