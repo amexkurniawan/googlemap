@@ -28,9 +28,13 @@
             android:name="com.google.ar.core"
             android:value="required" />
         <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${GOOGLE_MAPS_API_KEY}" />
 
+        <activity android:name=".ui.lesson3.MapWithMarkerActivity" />
         <activity android:name=".ui.lesson2.NearbyPlaceActivity" />
         <activity android:name=".ui.lesson1.AddMapKtxActivity" />
         <activity android:name=".ui.lesson1.AddMapActivity" />
