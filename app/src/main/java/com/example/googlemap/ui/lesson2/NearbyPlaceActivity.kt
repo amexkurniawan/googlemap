@@ -1,5 +1,6 @@
 package com.example.googlemap.ui.lesson2
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.googlemap.R
@@ -13,6 +14,7 @@ import android.location.Location
 import android.util.Log
 import android.widget.Toast
 import androidx.core.content.getSystemService
+import com.example.googlemap.BuildConfig
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -157,10 +159,11 @@ class NearbyPlaceActivity : AppCompatActivity(), SensorEventListener {
         matchingMarker?.showInfoWindow()
     }
 
-
+    @SuppressLint("MissingPermission")
     private fun setUpMaps() {
         mapFragment.getMapAsync { googleMap ->
             // TODO set isMyLocationEnabled to true
+            googleMap.isMyLocationEnabled = true
 
             getCurrentLocation {
                 val pos = CameraPosition.fromLatLngZoom(it.latLng, 13f)
@@ -179,13 +182,19 @@ class NearbyPlaceActivity : AppCompatActivity(), SensorEventListener {
         }
     }
 
+    @SuppressLint("MissingPermission")
     private fun getCurrentLocation(onSuccess: (Location) -> Unit) {
-        // TODO get current location
+        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+            currentLocation = location
+            onSuccess(location)
+        }.addOnFailureListener {
+            Log.e(TAG, "Could not get location")
+        }
     }
 
     private fun getNearbyPlaces(location: Location) {
         // TODO fill in API key
-        val apiKey = "API Key goes here"
+        val apiKey = BuildConfig.GOOGLE_MAPS_API_KEY
         placesService.nearbyPlaces(
             apiKey = apiKey,
             location = "${location.latitude},${location.longitude}",
