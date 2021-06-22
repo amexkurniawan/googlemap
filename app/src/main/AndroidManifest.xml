@@ -4,16 +4,15 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
-    <!-- Sceneform requires OpenGL ES 3.0 or later. -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- Sceneform requires OpenGL ES 3.0 or later. -->
     <uses-feature
         android:glEsVersion="0x00030000"
         android:required="true" />
-
-    <!-- Indicates that app requires ARCore ("AR Required").
+    <!--
+ Indicates that app requires ARCore ("AR Required").
     Ensures the app is visible only in the Google Play Store on devices that support ARCore.
-    For "AR Optional" apps remove this line. -->
+    For "AR Optional" apps remove this line.
+    -->
     <uses-feature android:name="android.hardware.camera.ar" />
 
     <application
@@ -32,6 +31,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="${GOOGLE_MAPS_API_KEY}" />
 
+        <activity android:name=".ui.lesson2.NearbyPlaceActivity" />
         <activity android:name=".ui.lesson1.AddMapKtxActivity" />
         <activity android:name=".ui.lesson1.AddMapActivity" />
         <activity android:name=".MainActivity">

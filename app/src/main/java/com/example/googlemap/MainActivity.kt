@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Button
 import com.example.googlemap.ui.lesson1.AddMapActivity
 import com.example.googlemap.ui.lesson1.AddMapKtxActivity
+import com.example.googlemap.ui.lesson2.NearbyPlaceActivity
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,6 +23,10 @@ class MainActivity : AppCompatActivity() {
         }
         findViewById<Button>(R.id.btnGMap2).setOnClickListener {
             val intent = Intent(this, AddMapKtxActivity::class.java)
+            startActivity(intent)
+        }
+        findViewById<Button>(R.id.btnGMap3).setOnClickListener {
+            val intent = Intent(this, NearbyPlaceActivity::class.java)
             startActivity(intent)
         }
     }
