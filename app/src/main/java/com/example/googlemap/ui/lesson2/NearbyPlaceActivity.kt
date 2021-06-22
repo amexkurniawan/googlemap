@@ -30,6 +30,7 @@ import com.example.googlemap.api.PlacesService
 import com.example.googlemap.ar.PlaceNode
 import com.example.googlemap.ar.PlacesArFragment
 import com.example.googlemap.model.lesson2.Place
+import com.example.googlemap.model.lesson2.getPositionVector
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -127,6 +128,7 @@ class NearbyPlaceActivity : AppCompatActivity(), SensorEventListener {
             val placeNode = PlaceNode(this, place)
             placeNode.setParent(anchorNode)
             // TODO set localPosition
+            placeNode.localPosition = place.getPositionVector(orientationAngles[0], currentLocation.latLng)
             placeNode.setOnTapListener { _, _ ->
                 showInfoWindow(place)
             }
@@ -243,6 +245,23 @@ class NearbyPlaceActivity : AppCompatActivity(), SensorEventListener {
 
     override fun onSensorChanged(event: SensorEvent?) {
         // TODO read sensor data
+        if (event == null) {
+            return
+        }
+        if (event.sensor.type == Sensor.TYPE_ACCELEROMETER) {
+            System.arraycopy(event.values, 0, accelerometerReading, 0, accelerometerReading.size)
+        } else if (event.sensor.type == Sensor.TYPE_MAGNETIC_FIELD) {
+            System.arraycopy(event.values, 0, magnetometerReading, 0, magnetometerReading.size)
+        }
+
+        // Update rotation matrix, which is needed to update orientation angles.
+        SensorManager.getRotationMatrix(
+            rotationMatrix,
+            null,
+            accelerometerReading,
+            magnetometerReading
+        )
+        SensorManager.getOrientation(rotationMatrix, orientationAngles)
     }
 }
 
