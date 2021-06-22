@@ -7,6 +7,7 @@ import android.widget.Button
 import com.example.googlemap.ui.lesson1.AddMapActivity
 import com.example.googlemap.ui.lesson1.AddMapKtxActivity
 import com.example.googlemap.ui.lesson2.NearbyPlaceActivity
+import com.example.googlemap.ui.lesson3.CurrentPlaceActivity
 import com.example.googlemap.ui.lesson3.MapWithMarkerActivity
 import com.example.googlemap.ui.lesson3.PolylinePolygonActivity
 
@@ -37,6 +38,10 @@ class MainActivity : AppCompatActivity() {
         }
         findViewById<Button>(R.id.btnGMap5).setOnClickListener {
             val intent = Intent(this, PolylinePolygonActivity::class.java)
+            startActivity(intent)
+        }
+        findViewById<Button>(R.id.btnGMap6).setOnClickListener {
+            val intent = Intent(this, CurrentPlaceActivity::class.java)
             startActivity(intent)
         }
     }

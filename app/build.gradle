@@ -16,7 +16,6 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -52,6 +51,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:17.0.0'
     // Maps SDK for Android Utility Library
     implementation 'com.google.maps.android:android-maps-utils:1.1.0'
+    implementation 'com.google.android.libraries.places:places:2.4.0'
     // Maps SDK for Android KTX Library
     implementation 'com.google.maps.android:maps-ktx:3.0.0'
     // Maps SDK for Android Utility Library KTX Library
@@ -64,4 +64,12 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:2.7.1"
     implementation "com.squareup.retrofit2:converter-gson:2.7.1"
     implementation "com.squareup.okhttp3:logging-interceptor:4.0.0"
+}
+
+secrets {
+    defaultPropertiesFileName 'local.properties'
+    // To add your Maps API key to this project:
+    // 1. Open the root project's local.properties file
+    // 2. Add this line, where YOUR_API_KEY is your API key:
+    //        MAPS_API_KEY=YOUR_API_KEY
 }
