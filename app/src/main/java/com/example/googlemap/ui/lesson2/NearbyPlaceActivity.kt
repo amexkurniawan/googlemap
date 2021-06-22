@@ -102,6 +102,9 @@ class NearbyPlaceActivity : AppCompatActivity(), SensorEventListener {
     private fun setUpAr() {
         arFragment.setOnTapArPlaneListener { hitResult, _, _ ->
             // TODO Create anchor here
+            val anchor = hitResult.createAnchor()
+            anchorNode = AnchorNode(anchor)
+            anchorNode?.setParent(arFragment.arSceneView.scene)
             addPlaces(anchorNode!!)
         }
     }
