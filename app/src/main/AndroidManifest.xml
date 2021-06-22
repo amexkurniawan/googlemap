@@ -34,6 +34,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="${GOOGLE_MAPS_API_KEY}" />
 
+        <activity android:name=".ui.lesson3.PolylinePolygonActivity" />
         <activity android:name=".ui.lesson3.MapWithMarkerActivity" />
         <activity android:name=".ui.lesson2.NearbyPlaceActivity" />
         <activity android:name=".ui.lesson1.AddMapKtxActivity" />

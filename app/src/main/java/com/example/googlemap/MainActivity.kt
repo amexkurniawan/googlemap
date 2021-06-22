@@ -8,6 +8,7 @@ import com.example.googlemap.ui.lesson1.AddMapActivity
 import com.example.googlemap.ui.lesson1.AddMapKtxActivity
 import com.example.googlemap.ui.lesson2.NearbyPlaceActivity
 import com.example.googlemap.ui.lesson3.MapWithMarkerActivity
+import com.example.googlemap.ui.lesson3.PolylinePolygonActivity
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,6 +33,10 @@ class MainActivity : AppCompatActivity() {
         }
         findViewById<Button>(R.id.btnGMap4).setOnClickListener {
             val intent = Intent(this, MapWithMarkerActivity::class.java)
+            startActivity(intent)
+        }
+        findViewById<Button>(R.id.btnGMap5).setOnClickListener {
+            val intent = Intent(this, PolylinePolygonActivity::class.java)
             startActivity(intent)
         }
     }

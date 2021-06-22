@@ -49,4 +49,14 @@
         android:text="Map with Marker"
         android:textColor="@color/white"
         android:textAllCaps="false"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnGMap5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/purple_200"
+        android:layout_marginBottom="12dp"
+        android:text="Polyline And Polygon"
+        android:textColor="@color/white"
+        android:textAllCaps="false"/>
 </LinearLayout>
