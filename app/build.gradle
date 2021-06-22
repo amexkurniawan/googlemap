@@ -48,6 +48,7 @@ dependencies {
 
     // Dependency to include Maps SDK for Android
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation 'com.google.android.gms:play-services-location:17.0.0'
     // Maps SDK for Android Utility Library
     implementation 'com.google.maps.android:android-maps-utils:1.1.0'
     // Maps SDK for Android KTX Library
@@ -56,4 +57,9 @@ dependencies {
     implementation 'com.google.maps.android:maps-utils-ktx:3.0.0'
     // Lifecycle Runtime KTX Library
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
+    // ARCore
+    implementation "com.google.ar.sceneform.ux:sceneform-ux:1.15.0"
+    // Retrofit
+    implementation "com.squareup.retrofit2:retrofit:2.7.1"
+    implementation "com.squareup.retrofit2:converter-gson:2.7.1"
 }
