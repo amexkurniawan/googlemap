@@ -2,12 +2,15 @@ package com.example.googlemap.ui.asset_register
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.core.content.ContextCompat
 import com.example.googlemap.R
 import com.example.googlemap.utils.asset_register.Asset
 import com.example.googlemap.utils.asset_register.AssetReader
+import com.example.googlemap.utils.helper.BitmapHelper
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MarkerOptions
 
@@ -15,6 +18,11 @@ class AssetRegisterActivity : AppCompatActivity() {
 
     private val asset: List<Asset> by lazy {
         AssetReader(this).read()
+    }
+
+    private val assetIcon: BitmapDescriptor by lazy {
+        val color = ContextCompat.getColor(this, R.color.purple_700)
+        BitmapHelper.vectorToBitmap(this, R.drawable.ic_baseline_place_24, color)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,6 +62,7 @@ class AssetRegisterActivity : AppCompatActivity() {
                 MarkerOptions()
                     .title(data.name)
                     .position(data.latLng)
+                    .icon(assetIcon)
             )
             marker.tag = data
         }
