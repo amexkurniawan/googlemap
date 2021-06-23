@@ -12,13 +12,13 @@ class AssetReader(private val context: Context) {
     private val gson = Gson()
 
     private val inputStream: InputStream
-        get() = context.resources.openRawResource(R.raw.places)
+        get() = context.resources.openRawResource(R.raw.asset)
 
     fun read(): List<Asset> {
-        val itemType = object : TypeToken<List<PlaceResponse>>() {}.type
+        val itemType = object : TypeToken<List<AssetResponse>>() {}.type
         val reader = InputStreamReader(inputStream)
-        return gson.fromJson<List<PlaceResponse>>(reader, itemType).map {
-            it.toPlace()
+        return gson.fromJson<List<AssetResponse>>(reader, itemType).map {
+            it.toAsset()
         }
     }
 }

@@ -2,7 +2,7 @@ package com.example.googlemap.utils.asset_register
 
 import com.google.android.gms.maps.model.LatLng
 
-data class PlaceResponse(
+data class AssetResponse(
     val geometry: Geometry,
     val name: String,
     val address: String
@@ -18,7 +18,7 @@ data class PlaceResponse(
     )
 }
 
-fun PlaceResponse.toPlace(): Asset = Asset(
+fun AssetResponse.toAsset(): Asset = Asset(
     name = name,
     latLng = LatLng(geometry.location.lat, geometry.location.lng),
     address = address

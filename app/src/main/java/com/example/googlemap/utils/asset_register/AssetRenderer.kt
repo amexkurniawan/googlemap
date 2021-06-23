@@ -11,9 +11,6 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.view.DefaultClusterRenderer
 
-/**
- * A custom cluster renderer for Place objects.
- */
 class AssetRenderer(
     private val context: Context,
     map: GoogleMap,
