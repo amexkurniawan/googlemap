@@ -1,0 +1,52 @@
+[
+  {
+    "geometry": {
+      "location": {
+        "lat": -3.827366089439763,
+        "lng": 102.31270643047797
+      }
+    },
+    "name": "Asset 1",
+    "address": "Jalan Hibrida 9 Kota Bengkulu"
+  },
+  {
+    "geometry": {
+      "location": {
+        "lat": -3.829049089314234,
+        "lng": 102.31364750008665
+      }
+    },
+    "name": "Asset 2",
+    "address": "Jalan Hibrida 10 Kota Bengkulu"
+  },
+  {
+    "geometry": {
+      "location": {
+        "lat": -3.8271337924424156,
+        "lng": 102.31729902970798
+      }
+    },
+    "name": "Asset 3",
+    "address": "Jalan Padat Karya 32 Kota Bengkulu"
+  },
+  {
+    "geometry": {
+      "location": {
+        "lat": -3.817321104970196,
+        "lng": 102.3100447713434
+      }
+    },
+    "name": "Asset 4",
+    "address": "Jalan Zainul Arifin Kota Bengkulu"
+  },
+  {
+    "geometry": {
+      "location": {
+        "lat": -3.8159872575111553,
+        "lng": 102.31342697135621
+      }
+    },
+    "name": "Asset 5",
+    "address": "Jalan Timur Indah 5 Raya Kota Bengkulu"
+  }
+]
