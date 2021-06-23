@@ -3,9 +3,18 @@ package com.example.googlemap.ui.asset_register
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.googlemap.R
+import com.example.googlemap.utils.asset_register.Asset
+import com.example.googlemap.utils.asset_register.AssetReader
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.MarkerOptions
 
 class AssetRegisterActivity : AppCompatActivity() {
+
+    private val asset: List<Asset> by lazy {
+        AssetReader(this).read()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_asset_register)
@@ -22,6 +31,20 @@ class AssetRegisterActivity : AppCompatActivity() {
         ) as? SupportMapFragment
         mapFragment?.getMapAsync { googleMap ->
             // set mark
+            setMarkers(googleMap)
+        }
+    }
+
+    /**
+     * Adds marker representations of the places list on the provided GoogleMap object
+     */
+    private fun setMarkers(googleMap: GoogleMap) {
+        asset.forEach { data ->
+            val marker = googleMap.addMarker(
+                MarkerOptions()
+                    .title(data.name)
+                    .position(data.latLng)
+            )
         }
     }
 }
