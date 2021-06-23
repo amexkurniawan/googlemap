@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import com.example.googlemap.ui.asset_register.AssetRegisterActivity
 import com.example.googlemap.ui.lesson1.AddMapActivity
 import com.example.googlemap.ui.lesson1.AddMapKtxActivity
 import com.example.googlemap.ui.lesson2.NearbyPlaceActivity
@@ -42,6 +43,10 @@ class MainActivity : AppCompatActivity() {
         }
         findViewById<Button>(R.id.btnGMap6).setOnClickListener {
             val intent = Intent(this, CurrentPlaceActivity::class.java)
+            startActivity(intent)
+        }
+        findViewById<Button>(R.id.btnGMap7).setOnClickListener {
+            val intent = Intent(this, AssetRegisterActivity::class.java)
             startActivity(intent)
         }
     }
