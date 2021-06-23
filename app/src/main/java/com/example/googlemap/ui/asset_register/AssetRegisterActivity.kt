@@ -38,6 +38,8 @@ class AssetRegisterActivity : AppCompatActivity() {
                 asset.forEach { bounds.include(it.latLng) }
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), 18))
             }
+            // Info Window Content
+            googleMap.setInfoWindowAdapter(MarkerAssetInfoAdapter(this))
             // set mark
             setMarkers(googleMap)
         }
@@ -53,6 +55,7 @@ class AssetRegisterActivity : AppCompatActivity() {
                     .title(data.name)
                     .position(data.latLng)
             )
+            marker.tag = data
         }
     }
 }
