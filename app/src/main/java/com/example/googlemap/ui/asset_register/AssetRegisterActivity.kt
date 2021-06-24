@@ -1,6 +1,7 @@
 package com.example.googlemap.ui.asset_register
 
 import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -13,6 +14,9 @@ import com.example.googlemap.R
 import com.example.googlemap.ui.lesson2.latLng
 import com.example.googlemap.utils.asset_register.Asset
 import com.example.googlemap.utils.asset_register.AssetReader
+import com.example.googlemap.utils.extentions.isGpsEnabled
+import com.example.googlemap.utils.extentions.isLocationPermissionGranted
+import com.example.googlemap.utils.extentions.requestLocationPermission
 import com.example.googlemap.utils.helper.BitmapHelper
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -35,15 +39,33 @@ class AssetRegisterActivity : AppCompatActivity() {
     }
 
     private val TAG = "AssetRegisterActivity"
+    private val REQUEST_ACCESS_FINE_LOCATION = 101
     private var map: GoogleMap? = null
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var currentLocation: Location? = null
+    private val radius = 2000 // (meter)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_asset_register)
 
-        setUpMap()
+        checkPermissionAndGps()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        checkPermissionAndGps()
+    }
+
+    private fun checkPermissionAndGps() {
+        when {
+            !isLocationPermissionGranted -> requestLocationPermission(REQUEST_ACCESS_FINE_LOCATION)
+            !isGpsEnabled -> {
+                Toast.makeText(this, "please enable your gps!", Toast.LENGTH_SHORT).show()
+                finish()
+            }
+            else -> setUpMap()
+        }
     }
 
     @SuppressLint("MissingPermission")
@@ -66,15 +88,37 @@ class AssetRegisterActivity : AppCompatActivity() {
         }
     }
 
-    private fun setMarkers(googleMap: GoogleMap) {
-        asset.forEach { data ->
-            val marker = googleMap.addMarker(
-                MarkerOptions()
-                    .title(data.name)
-                    .position(data.latLng)
-                    .icon(assetIcon)
-            )
-            marker.tag = data
+    private fun setMarkers(googleMap: GoogleMap, asset: List<Asset>) {
+        if (asset.isNullOrEmpty()) {
+            Toast.makeText(this, "No asset in radius $radius meter.", Toast.LENGTH_SHORT).show()
+        } else {
+            asset.forEach { data ->
+                val marker = googleMap.addMarker(
+                        MarkerOptions()
+                                .title(data.name)
+                                .position(data.latLng)
+                                .icon(assetIcon)
+                )
+                marker.tag = data
+            }
+        }
+    }
+
+    private fun getAssetByRadius(myLocation: Location) {
+        map?.let {
+            val assetInRadius = ArrayList<Asset>()
+            var location = Location("")
+
+            asset.forEach {
+                location.latitude = it.latLng.latitude
+                location.longitude = it.latLng.longitude
+
+                if (myLocation.distanceTo(location) <= radius) {
+                    assetInRadius.add(it)
+                }
+            }
+
+            setMarkers(it, assetInRadius)
         }
     }
 
@@ -95,15 +139,17 @@ class AssetRegisterActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.option_get_asset) {
-            getAssetByRadius()
+            currentLocation?.let { getAssetByRadius(it) }
         }
         return true
     }
 
-    private fun getAssetByRadius() {
-        map?.let {
-            Toast.makeText(this, "Finding asset..", Toast.LENGTH_SHORT).show()
-            setMarkers(it)
-        }
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        if (requestCode == REQUEST_ACCESS_FINE_LOCATION) {
+            if (grantResults.size == 1 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "location permission denied", Toast.LENGTH_SHORT).show()
+                finish()
+            }
+        } else super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 }
