@@ -5,6 +5,9 @@ import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.example.googlemap.R
 import com.example.googlemap.ui.lesson2.latLng
@@ -32,6 +35,7 @@ class AssetRegisterActivity : AppCompatActivity() {
     }
 
     private val TAG = "AssetRegisterActivity"
+    private var map: GoogleMap? = null
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var currentLocation: Location? = null
 
@@ -42,9 +46,6 @@ class AssetRegisterActivity : AppCompatActivity() {
         setUpMap()
     }
 
-    /**
-     * reference to the GoogleMap object
-     */
     @SuppressLint("MissingPermission")
     private fun setUpMap() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
@@ -53,6 +54,7 @@ class AssetRegisterActivity : AppCompatActivity() {
             R.id.asset_register_map
         ) as? SupportMapFragment
         mapFragment?.getMapAsync { googleMap ->
+            map = googleMap
             googleMap.isMyLocationEnabled = true
             // Info Window Content
             googleMap.setInfoWindowAdapter(MarkerAssetInfoAdapter(this))
@@ -60,14 +62,10 @@ class AssetRegisterActivity : AppCompatActivity() {
             getCurrentLocation {
                 val pos = CameraPosition.fromLatLngZoom(it.latLng, 13f)
                 googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(pos))
-                setMarkers(googleMap)
             }
         }
     }
 
-    /**
-     * Adds marker representations of the places list on the provided GoogleMap object
-     */
     private fun setMarkers(googleMap: GoogleMap) {
         asset.forEach { data ->
             val marker = googleMap.addMarker(
@@ -87,6 +85,25 @@ class AssetRegisterActivity : AppCompatActivity() {
             onSuccess(location)
         }.addOnFailureListener {
             Log.e(TAG, "Could not get location")
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.get_asset_radius_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.option_get_asset) {
+            getAssetByRadius()
+        }
+        return true
+    }
+
+    private fun getAssetByRadius() {
+        map?.let {
+            Toast.makeText(this, "Finding asset..", Toast.LENGTH_SHORT).show()
+            setMarkers(it)
         }
     }
 }
