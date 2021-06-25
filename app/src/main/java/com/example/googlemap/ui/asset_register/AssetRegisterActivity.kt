@@ -33,7 +33,11 @@ import kotlinx.android.synthetic.main.activity_asset_register.*
 class AssetRegisterActivity : AppCompatActivity(), View.OnClickListener {
 
     private val asset: List<Asset> by lazy {
-        AssetReader(this).read()
+        //AssetReader(this).read()
+        getCurrentLocation{
+            Log.d(TAG, "lat: ${it.latitude}, lng: ${it.longitude}")
+        }
+        AssetReader(this).setRandomAsset(currentLocation!!)
     }
 
     private val assetIcon: BitmapDescriptor by lazy {
@@ -93,6 +97,7 @@ class AssetRegisterActivity : AppCompatActivity(), View.OnClickListener {
             getCurrentLocation {
                 val pos = CameraPosition.fromLatLngZoom(it.latLng, 13f)
                 googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(pos))
+                setMarkers(googleMap, asset)
             }
         }
     }
@@ -100,7 +105,7 @@ class AssetRegisterActivity : AppCompatActivity(), View.OnClickListener {
     private fun setMarkers(googleMap: GoogleMap, asset: List<Asset>) {
         if (asset.isNullOrEmpty()) {
             googleMap.clear()
-            Toast.makeText(this, "No asset in radius $radius meter.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "No asset in radius ${radius/1000} Km.", Toast.LENGTH_SHORT).show()
         } else {
             googleMap.clear()
             asset.forEach { data ->
