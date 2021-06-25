@@ -8,6 +8,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.example.googlemap.R
@@ -26,8 +28,9 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.MarkerOptions
+import kotlinx.android.synthetic.main.activity_asset_register.*
 
-class AssetRegisterActivity : AppCompatActivity() {
+class AssetRegisterActivity : AppCompatActivity(), View.OnClickListener {
 
     private val asset: List<Asset> by lazy {
         AssetReader(this).read()
@@ -43,13 +46,14 @@ class AssetRegisterActivity : AppCompatActivity() {
     private var map: GoogleMap? = null
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var currentLocation: Location? = null
-    private val radius = 2000 // (meter)
+    private var radius = 1000 // (meter)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_asset_register)
 
         checkPermissionAndGps()
+        setView()
     }
 
     override fun onResume() {
@@ -66,6 +70,11 @@ class AssetRegisterActivity : AppCompatActivity() {
             }
             else -> setUpMap()
         }
+    }
+
+    private fun setView() {
+        btnMinus.setOnClickListener(this)
+        btnPlus.setOnClickListener(this)
     }
 
     @SuppressLint("MissingPermission")
@@ -90,8 +99,10 @@ class AssetRegisterActivity : AppCompatActivity() {
 
     private fun setMarkers(googleMap: GoogleMap, asset: List<Asset>) {
         if (asset.isNullOrEmpty()) {
+            googleMap.clear()
             Toast.makeText(this, "No asset in radius $radius meter.", Toast.LENGTH_SHORT).show()
         } else {
+            googleMap.clear()
             asset.forEach { data ->
                 val marker = googleMap.addMarker(
                         MarkerOptions()
@@ -151,5 +162,22 @@ class AssetRegisterActivity : AppCompatActivity() {
                 finish()
             }
         } else super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    override fun onClick(v: View?) {
+        when(v!!.id) {
+            R.id.btnMinus -> {
+                if (radius == 1000) {
+                    radius
+                } else {
+                    radius = radius - 1000
+                    findViewById<TextView>(R.id.tvNumberOfRadius).text = (radius/1000).toString()
+                }
+            }
+            R.id.btnPlus -> {
+                radius = radius + 1000
+                findViewById<TextView>(R.id.tvNumberOfRadius).text = (radius/1000).toString()
+            }
+        }
     }
 }
